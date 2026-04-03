@@ -1,0 +1,65 @@
+---
+description: Rules for safely reading and modifying openclaw.json — the central OpenClaw configuration file
+globs: openclaw.json
+alwaysApply: false
+---
+
+# openclaw.json Configuration Rules
+
+## Schema Overview (top-level keys)
+```
+version, mode, wizard, auth, models, agents, tools, 
+commands, session, hooks, channels, gateway, plugins
+```
+
+## Safe Edit Workflow
+```bash
+# 1. Backup
+cp openclaw.json openclaw.json.bak
+
+# 2. Edit
+
+# 3. Validate syntax
+python3 -c "import json; json.load(open('openclaw.json')); print('OK')"
+
+# 4. Restart OpenClaw to apply
+```
+
+## Key Sections
+
+### agents
+Each agent entry:
+```json
+{
+  "id": "coder",
+  "workspace": "/home/ultra9-ubuntu/.openclaw/workspace-coder",
+  "model": "qwen2.5-coder:32b",
+  "identity": { "name": "Coder", "emoji": "💻" }
+}
+```
+Valid model sources: `ollama` (local) or Anthropic model IDs.
+
+### channels
+Tokens live here. Do NOT log or print these fields:
+- `channels.discord.token`
+- `channels.slack.token`  
+- `channels.telegram.token`
+
+### gateway
+- `gateway.port`: 18789 (default)
+- `gateway.host`: 127.0.0.1 (loopback only — do not expose externally)
+- `gateway.auth`: token-based
+
+### tools.denyList
+Commands blocked from exec. Add dangerous commands here — do not remove existing entries.
+
+## Common Changes
+
+**Add a new agent:**
+Add to `agents[]` array with unique `id`, valid `workspace` path, and `model`.
+
+**Change a model:**
+Update `model` field in the relevant agent. Use Ollama model IDs for local, Claude model IDs for API.
+
+**Enable a plugin:**
+Set `plugins.{name}.enabled: true` and provide required config.

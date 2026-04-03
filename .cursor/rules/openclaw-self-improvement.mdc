@@ -1,0 +1,49 @@
+---
+description: OpenClaw SELF_IMPROVEMENT loop — how to improve the system, add capabilities, and compound value
+alwaysApply: true
+---
+
+# OpenClaw Self-Improvement Protocol
+
+## The Loop
+```
+OBSERVE → DIAGNOSE → DESIGN → IMPLEMENT → VALIDATE → DEPLOY → OBSERVE
+```
+
+## What Compounds
+1. **Rules** — `.cursor/rules/*.mdc` — persistent AI guidance, applied automatically
+2. **Skills** — `.cursor/skills/*/SKILL.md` — reusable agent capabilities
+3. **MCPs** — tool servers that expand what agents can do
+4. **Agent workspaces** — richer AGENTS.md / SOUL.md = smarter agents
+5. **Memory** — `workspace-*/memory/` — session context that persists
+
+## When to Add a Rule
+- Pattern repeated 3+ times → create a rule
+- Mistake made twice → create a rule that prevents it
+- Architectural decision made → document it as a rule
+
+## When to Add a Skill
+- Multi-step workflow used more than once → extract to skill
+- Domain knowledge not in model training → encode as skill
+- Process that must be consistent → enforce via skill
+
+## When to Add an MCP
+- Need tool not available via shell → find/build MCP server
+- External API needed repeatedly → MCP > inline implementation
+- State needs to persist across sessions → memory MCP
+
+## Improvement Backlog Format
+Track improvements in `workspace-orchestor/IMPROVEMENT_BACKLOG.md`:
+```markdown
+## [YYYY-MM-DD] Improvement Title
+- **Type**: rule | skill | mcp | agent | workflow
+- **Problem**: what keeps going wrong / what's slow
+- **Solution**: what to build
+- **Status**: proposed | in_progress | done
+```
+
+## Self-Improvement Principles
+- Compound > one-off: will this help every future session?
+- Measure cost: did this reduce token usage, time, or errors?
+- Orchestor drives: self-improvement is a CEO-level concern
+- Never improve in isolation: validate with risk agent before deploying changes

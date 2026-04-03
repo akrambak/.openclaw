@@ -1,0 +1,46 @@
+---
+description: OpenClaw multi-agent system architecture, mandatory pipeline, agent registry, and cost rules
+alwaysApply: true
+---
+
+# OpenClaw Architecture
+
+## Mandatory Pipeline
+```
+REQUEST → orchestor → research → cto → quant → risk → coder → ops → DEPLOYED
+```
+**NO CODING BEFORE RESEARCH. EVER.**
+
+## Agent Registry
+| Agent | Role | Model | Workspace |
+|-------|------|-------|-----------|
+| main | Light router / entrypoint | Qwen 3 8B (local) | workspace/ |
+| orchestor | CEO — workflow control | Claude Sonnet 4.6 | workspace-orchestor/ |
+| research | Find existing solutions | Claude 4.5 / Qwen 3.5 27B | workspace-research/ |
+| cto | System architecture | Qwen 3.5 27B (local) | workspace-cto/ |
+| quant | Trading strategies | DeepSeek R1 14B (local) | workspace-quant/ |
+| risk | Risk validation | Qwen 3 14B (local) | workspace-risk/ |
+| coder | Production code | Qwen 2.5 Coder 32B (local) | workspace-coder/ |
+| coder-fast | Fast iterations | Qwen 2.5 Coder 7B (local) | workspace-coder-fast/ |
+| ops | Deployment | Mistral Small 7B (local) | workspace-ops/ |
+
+## Task Routing
+- `fast_loop` → coder-fast
+- `final_code` → coder
+- `architecture` → cto
+- `research` → research
+- `strategy` → quant
+- `risk_validation` → risk
+- `deployment` → ops
+
+## Cost Rules
+- 90% of tasks → local Ollama (free)
+- Claude → orchestration + complex reasoning only
+- Escalate to Claude only when local model fails
+- Reuse code > generate new code
+
+## Config Files
+- Main config: `openclaw.json`
+- Environment: `.env`
+- Gateway: localhost:18789
+- Ollama: http://127.0.0.1:11434

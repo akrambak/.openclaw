@@ -1,0 +1,55 @@
+---
+description: OpenClaw workspace file conventions — AGENTS.md, SOUL.md, USER.md, IDENTITY.md, BOOTSTRAP.md, session memory patterns
+globs: workspace*/**
+alwaysApply: false
+---
+
+# OpenClaw Workspace Conventions
+
+## Required Files Per Workspace
+Every `workspace-*/` directory should contain:
+```
+workspace-{agent}/
+├── AGENTS.md       # Role definition, workflow, registry
+├── SOUL.md         # Agent identity and behavioral directives  
+├── USER.md         # User preferences and context (optional)
+├── IDENTITY.md     # Agent self-model (optional)
+├── BOOTSTRAP.md    # Startup instructions (optional)
+├── TOOLS.md        # Available tools (optional)
+├── HEARTBEAT.md    # Health/status tracking (optional)
+└── .openclaw/
+    └── workspace-state.json   # Runtime state
+```
+
+## Session Startup Order
+1. Read `SOUL.md` — identity calibration
+2. Read `USER.md` — user context
+3. Read `memory/` daily files — recent context
+4. Read `MEMORY.md` — persistent rules
+
+## AGENTS.md Structure
+```markdown
+# AGENTS.md — {Role Name}
+
+## System Role
+[One sentence: what this agent does]
+
+## Agent Registry
+[Table of all agents in the system]
+
+## Mandatory Workflow
+[Pipeline definition]
+
+## Task Classification
+[Map task types to agents]
+```
+
+## SOUL.md Principles
+- Terse. Direct. No corporate fluff.
+- Define: primary directive, decision framework, boundaries
+- Keep under 100 lines — identity, not documentation
+
+## Memory Pattern
+- `memory/YYYY-MM-DD.md` — daily session notes
+- `MEMORY.md` — permanent rules and persistent context
+- `sessions/*.jsonl` — full session history (auto-managed)

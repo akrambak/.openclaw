@@ -1,0 +1,38 @@
+---
+description: Security rules for OpenClaw — secrets management, never commit credentials, safe config editing
+alwaysApply: true
+---
+
+# OpenClaw Security
+
+## Critical: Never Commit Secrets
+
+These files contain live credentials — NEVER include their values in code, comments, or commits:
+- `openclaw.json` — channel tokens (Discord, Slack, Telegram), gateway token
+- `.env` — API keys
+- `agents/*/agent/auth-profiles.json` — provider API keys
+- `identity/device-auth.json` — device credentials
+- `exec-approvals.json` — socket token
+
+`.gitignore` already excludes them. Verify before any `git add`.
+
+## Secret Locations (read-only reference)
+```
+ANTHROPIC_API_KEY      → agents/main/agent/auth-profiles.json
+GATEWAY_TOKEN          → openclaw.json → gateway.token
+DISCORD_TOKEN          → openclaw.json → channels.discord.token
+TELEGRAM_TOKEN         → openclaw.json → channels.telegram.token
+```
+
+## Safe Config Editing
+1. Always backup before editing: `cp openclaw.json openclaw.json.bak`
+2. Validate JSON after edit: `python3 -c "import json; json.load(open('openclaw.json'))"`
+3. Never hardcode tokens in agent workspaces or markdown files
+
+## Exec Safety
+- Gateway deny list in `openclaw.json` blocks: camera, screen, contacts, location APIs
+- Exec approvals stored in `exec-approvals.json` — do not manually bypass
+
+## Channel Security
+- Slack: allowlisted channel only — check `channels.slack.allowedChannels`
+- Discord: token scoped to configured guilds only
