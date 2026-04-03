@@ -1,0 +1,66 @@
+# ──────────────────────────────────────────
+# SECRETS & CREDENTIALS
+# ──────────────────────────────────────────
+.env
+openclaw.json
+openclaw.json.bak
+openclaw.json.bak.*
+
+# Agent auth profiles (API keys per provider)
+agents/*/agent/auth-profiles.json
+
+# Device & identity
+identity/device-auth.json
+identity/device.json
+devices/paired.json
+devices/pending.json
+
+# Gateway exec approvals (contains socket token)
+exec-approvals.json
+
+# Telegram command hashes
+telegram/
+
+# ──────────────────────────────────────────
+# RUNTIME STATE
+# ──────────────────────────────────────────
+
+# Agent runtime dirs (sessions, state, model cache)
+agents/*/sessions/
+agents/*/agent/models.json
+
+# Workspace runtime state
+workspace*/.openclaw/
+workspace*/sessions/
+workspace*/memory/
+
+# Task runner SQLite database
+tasks/
+
+# Update check state
+update-check.json
+
+# Canvas (runtime UI)
+canvas/
+
+# ──────────────────────────────────────────
+# LOGS & AUDIT TRAILS
+# ──────────────────────────────────────────
+logs/
+
+# ──────────────────────────────────────────
+# DATA STORES
+# ──────────────────────────────────────────
+data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# ──────────────────────────────────────────
+# OS / EDITOR ARTIFACTS
+# ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
