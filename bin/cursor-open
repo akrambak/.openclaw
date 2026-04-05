@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# cursor-open — run Cursor CLI with dynamic IPC socket detection
+# Works even when VSCODE_IPC_HOOK_CLI is stale or unset
+#
+# Usage: cursor-open [cursor args...]
+# Examples:
+#   cursor-open /path/to/file.py
+#   cursor-open -g /path/to/file.py:42
+#   cursor-open -d old.py new.py
+
+set -euo pipefail
+
+CURSOR_BIN="cursor"
+
+# If VSCODE_IPC_HOOK_CLI is already set and the socket exists, use it as-is
+if [[ -n "${VSCODE_IPC_HOOK_CLI:-}" && -S "$VSCODE_IPC_HOOK_CLI" ]]; then
+  exec "$CURSOR_BIN" "$@"
+fi
+
+# Otherwise, find the most recently modified live socket
+SOCKET=$(ls -t /run/user/"$(id -u)"/vscode-ipc-*.sock 2>/dev/null | head -1)
+
+if [[ -z "$SOCKET" ]]; then
+  echo "[cursor-open] ERROR: Cursor IDE is not running or no IPC socket found." >&2
+  echo "[cursor-open] Start Cursor and try again." >&2
+  exit 1
+fi
+
+export VSCODE_IPC_HOOK_CLI="$SOCKET"
+exec "$CURSOR_BIN" "$@"
