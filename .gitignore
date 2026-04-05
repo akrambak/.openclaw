@@ -18,6 +18,9 @@ devices/pending.json
 # Gateway exec approvals (contains socket token)
 exec-approvals.json
 
+# Gateway token file for MCP/external clients
+.gateway.token
+
 # Telegram command hashes
 telegram/
 
