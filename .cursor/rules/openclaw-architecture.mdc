@@ -39,6 +39,26 @@ REQUEST → orchestor → research → cto → quant → risk → coder → ops 
 - Escalate to Claude only when local model fails
 - Reuse code > generate new code
 
+## Sub-Agent Spawning (sessions_spawn)
+Agents spawn background workers via `sessions_spawn` tool. Config in `agents.defaults.subagents`:
+```json
+{
+  "maxSpawnDepth": 2,
+  "maxChildrenPerAgent": 5,
+  "maxConcurrent": 8,
+  "runTimeoutSeconds": 900
+}
+```
+- `maxSpawnDepth: 2` = orchestor can spawn workers (main → orchestor → worker agents)
+- Sub-agents get all tools EXCEPT session tools by default
+- Depth-1 orchestrators additionally get `sessions_spawn`, `sessions_list`, `sessions_history`
+- Sub-agents only inject AGENTS.md + TOOLS.md (no SOUL.md, USER.md, etc.)
+- Results announced back via announce step — rewrite in normal voice, don't forward raw metadata
+
+## Agent-to-Agent Messaging
+`tools.agentToAgent.enabled: true` — agents can message each other via `sessions_send`.
+All 9 agents are in the allow list. Use this for pipeline handoffs.
+
 ## Config Files
 - Main config: `openclaw.json`
 - Environment: `.env`

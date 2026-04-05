@@ -1,0 +1,51 @@
+---
+description: OpenClaw workspace file map — what each workspace file does and when it's loaded
+alwaysApply: false
+---
+
+# OpenClaw Workspace Files
+
+## Bootstrap Files (injected into agent context every session)
+| File | Purpose | Load condition |
+|------|---------|----------------|
+| `AGENTS.md` | Operating instructions, memory workflow, red lines | Always |
+| `SOUL.md` | Persona, tone, voice, opinions | Always |
+| `USER.md` | Who the user is, how to address them | Always |
+| `IDENTITY.md` | Agent name, vibe, emoji | Always |
+| `TOOLS.md` | Local tool notes and conventions (guidance only — doesn't control tool availability) | Always |
+| `HEARTBEAT.md` | Short checklist for heartbeat runs — keep tiny to avoid token burn | Heartbeat runs |
+| `BOOT.md` | Startup checklist on gateway restart (uses message tool for outbound) | Gateway restart |
+| `BOOTSTRAP.md` | One-time first-run ritual — DELETE after completing | First run only |
+| `memory/YYYY-MM-DD.md` | Daily session notes — today + yesterday | Manual (agent reads) |
+| `MEMORY.md` | Curated long-term memory — ONLY load in main/private session | Main session only |
+
+## Sub-Agent Context Limitation
+Sub-agents spawned via `sessions_spawn` only inject **AGENTS.md + TOOLS.md**.
+They do NOT get SOUL.md, IDENTITY.md, USER.md, HEARTBEAT.md, or BOOTSTRAP.md.
+
+## Required Files Per Agent Workspace
+Every `workspace-{agent}/` must have:
+- `AGENTS.md` — role, workflow, red lines
+- `SOUL.md` — persona and tone
+- `IDENTITY.md` — name/emoji
+- `USER.md` — client/upstream agent context
+- `TOOLS.md` — tool conventions
+- `memory/` — daily log directory
+
+## File Size Limits
+- Large bootstrap files are truncated at injection (default 20,000 chars per file)
+- Total bootstrap budget: 150,000 chars across all files
+- Keep HEARTBEAT.md and BOOT.md short — token cost is real
+
+## Skills Location (highest precedence first)
+1. `workspace-{agent}/skills/` — workspace-specific, highest priority
+2. `/.agents/skills/` — project agent skills
+3. `~/.agents/skills/` — personal agent skills
+4. `~/.openclaw/skills/` — managed/shared across all agents
+5. Bundled skills (shipped with install)
+6. `skills.load.extraDirs` — lowest priority
+
+## Session Storage
+Sessions stored at: `~/.openclaw/agents/{agentId}/sessions/{sessionId}.jsonl`
+Auth profiles at: `~/.openclaw/agents/{agentId}/agent/auth-profiles.json`
+These are NOT in the workspace — never commit them.
